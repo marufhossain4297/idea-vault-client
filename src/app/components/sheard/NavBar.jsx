@@ -55,7 +55,7 @@ const NavBar = () => {
                                 <button onClick={async () => await authClient.signOut()} className='px-4 py-2 text-white font-medium bg-[#3525CD] rounded-xl shadow-none border-none btn'>Sign Out</button>
                             </div>
                             :
-                            <div>
+                            <div className='gap-4 flex'>
                                 <Link href={'/login'}>
                                     <button className='px-4 py-2 text-white font-medium bg-[#3525CD] rounded-xl shadow-none border-none btn'>Login</button>
                                 </Link>
