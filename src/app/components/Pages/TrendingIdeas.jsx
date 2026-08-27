@@ -17,7 +17,7 @@ const jetBrainsMono = JetBrains_Mono({
 });
 
 
-const TrendingIdeas = async() => {
+const TrendingIdeas = async () => {
 
     const res = await fetch('http://localhost:8000/ideas/featured')
     const datas = await res.json()
@@ -28,8 +28,9 @@ const TrendingIdeas = async() => {
                 <h2 className={`${hankenGrotesk.className} font-bold text-3xl`}>Trending Concepts</h2>
                 <div className="flex justify-between items-center">
                     <p className='text-[#464555]'>High-potential ideas gaining traction this week.</p>
+
                     <Link href={'/ideas'}>
-                        <button className={`text-[#3525CD] cursor-pointer font-bold flex items-center gap-2 ${jetBrainsMono.className}`}>View All <FaArrowRight /> </button>
+                        <button className={`text-[#3525CD] hidden cursor-pointer font-bold lg:flex items-center gap-2 ${jetBrainsMono.className}`}>View All <FaArrowRight /> </button>
                     </Link>
                 </div>
                 <div data-aos="fade-up" className="grid gap-4 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 my-8">
@@ -37,6 +38,10 @@ const TrendingIdeas = async() => {
                         datas.map(data => <FeaturedCard data={data} key={data._id} />)
                     }
                 </div>
+
+                <Link href={'/ideas'}>
+                    <button className={`bg-[#3525CD] text-white p-3 rounded-2xl w-full text-center cursor-pointer font-bold justify-center lg:hidden flex items-center gap-2 ${jetBrainsMono.className}`}>View All <FaArrowRight /> </button>
+                </Link>
             </div>
         </div>
     );

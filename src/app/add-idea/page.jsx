@@ -1,66 +1,103 @@
 'use client'
-import React from 'react';
-import { Upload } from 'lucide-react';
-import { Hanken_Grotesk } from 'next/font/google';
+import React, { useState } from 'react';
+import { MinusCircle, Plus, Upload } from 'lucide-react';
+import { Hanken_Grotesk, JetBrains_Mono } from 'next/font/google';
 import { Button, Select, FieldError, Form, Input, Label, ListBox, TextField, TextArea } from "@heroui/react";
 import { authClient } from '@/lib/auth-client';
+import { toast } from 'sonner';
+import { redirect } from 'next/navigation';
 
 const hankenGrotesk = Hanken_Grotesk({
     variable: "--font-hanken-grotesk",
     subsets: ["latin"],
 });
 
-const AddIdeaPage = () => {
+const jetBrainsMono = JetBrains_Mono({
+    variable: "--font-hanken-grotesk",
+    subsets: ["latin"],
+});
 
-    const { data: session, isPending, error } = authClient.useSession()
-    const user = session?.user
-    console.log(user);
+const AddIdeaPage = () => {
+    const { data: session } = authClient.useSession();
+    const user = session?.user;
+
+
+    const [collaborations, setCollaborations] = useState([]);
+
+    
+    const handleAddCollaboration = () => {
+        setCollaborations((prev) => [...prev, { name: '', role: '', logo: '' }]);
+    };
+
+    const handleRemoveCollaboration = (indexToRemove) => {
+        setCollaborations((prev) => prev.filter((_, index) => index !== indexToRemove));
+    };
+
+
+    const handleCollaborationChange = (index, field, value) => {
+        setCollaborations((prev) => {
+            const updated = [...prev];
+            updated[index][field] = value;
+            return updated;
+        });
+    };
 
     const onSubmit = async (e) => {
-        e.preventDefault()
-        const formData = new FormData(e.currentTarget)
-        const ideaInfo = Object.fromEntries(formData.entries())
-        const { title, category, budget, image, targetaudience, tags, shortdes, problemstatement, solution, description } = ideaInfo
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        const ideaInfo = Object.fromEntries(formData.entries());
+        const { title, category, budget, image, targetaudience, tags, shortdes, problemstatement, solution, description } = ideaInfo;
+
         const ideaInfoWithUser = {
             userId: user?.id,
             email: user?.email,
             name: user?.name,
             userImage: user?.image,
-            title: title,
-            category: category,
-            budget: budget,
-            tags: tags,
-            image: image,
-            targetaudience: targetaudience,
+            title,
+            category,
+            budget,
+            tags: tags ? tags.split(',').map((tag) => tag.trim()) : [],
+            image,
+            targetaudience,
             shortdescription: shortdes,
-            problemstatement: problemstatement,
-            solution: solution,
-            description: description,
-            createdAt: new Date().toISOString()
-        }
+            problemstatement,
+            solution,
+            description,
+            createdAt: new Date().toISOString(),
+            collaborations: collaborations
+        };
+
         const res = await fetch('http://localhost:8000/ideas', {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'
             },
             body: JSON.stringify(ideaInfoWithUser)
-        })
-        const data = await res.json()
-    }
+        });
+        const data = await res.json();
+        if(data){
+            toast.success('Idea added success')
+            redirect('/ideas')
+        }
+        else{
+            toast.error(error.massage)
+        }
+    };
 
     return (
         <div data-aos="fade-up" className='w-7/12 mx-auto py-16 px-12'>
-            <div className=''>
+
+            <div>
                 <h2 className={`text-5xl font-bold ${hankenGrotesk.className}`}>Publish your Idea</h2>
+
                 <p className='text-[18px] mb-8 text-[#464555] mt-2'>Formalize your concept and secure it in the vault.</p>
             </div>
+
             <div className='shadow-[0_20px_100px_rgba(79,70,229,0.12)] border border-[#C7C4D8] rounded-2xl p-8'>
+
                 <Form onSubmit={onSubmit} className="flex flex-col gap-4">
-                    <TextField
-                        isRequired
-                        name='title'
-                        type="text"
-                    >
+
+                    <TextField isRequired name='title' type="text">
                         <Label className={`text-[18px] ${hankenGrotesk.className} font-semibold text-black`}>Idea Title</Label>
 
                         <Input className="border shadow-none border-[#C7C4D8] py-3.5 placeholder:text-[#777587] px-4" placeholder="E.g., Quantum Encrypted Cloud Storage" />
@@ -70,13 +107,8 @@ const AddIdeaPage = () => {
 
                     <div className='grid grid-cols-2 gap-4'>
                         <div>
-                            <Select
-                                name='category'
-                                isRequired
-
-                                placeholder="Select category"
-                            >
-                                <Label className='text-black border-none'>Category</Label>
+                            <Select name='category' isRequired placeholder="Select category">
+                                <Label className='text-black text-[16px] font-semibold border-none'>Category</Label>
 
                                 <Select.Trigger className="rounded-2xl py-3.5 px-4 shadow-none border border-slate-300">
                                     <Select.Value />
@@ -85,41 +117,46 @@ const AddIdeaPage = () => {
 
                                 <Select.Popover>
                                     <ListBox>
-                                        <ListBox.Item id="teach" textValue="Tech">
-                                            Tech
-                                            <ListBox.ItemIndicator />
-                                        </ListBox.Item>
-                                        <ListBox.Item id="Health" textValue="Health">
-                                            Health
-                                            <ListBox.ItemIndicator />
-                                        </ListBox.Item>
-                                        <ListBox.Item id="AI" textValue="AI">
-                                            AI
-                                            <ListBox.ItemIndicator />
-                                        </ListBox.Item>
-                                        <ListBox.Item id="Education" textValue="Education">
-                                            Education
-                                            <ListBox.ItemIndicator />
-                                        </ListBox.Item>
-                                        <ListBox.Item id="Fintech" textValue="Fintech">
-                                            Fintech
-                                            <ListBox.ItemIndicator />
-                                        </ListBox.Item>
-                                        <ListBox.Item id="Sustainability" textValue="Sustainability">
-                                            Sustainability
-                                            <ListBox.ItemIndicator />
-                                        </ListBox.Item>
+
+                                        <ListBox.Item id="AI Tools" textValue="AI Tools">AI Tools<ListBox.ItemIndicator /></ListBox.Item>
+
+                                        <ListBox.Item id="Real Estate Tech" textValue="Real Estate Tech">Real Estate Tech<ListBox.ItemIndicator /></ListBox.Item>
+
+                                        <ListBox.Item id="Developer Tools" textValue="Developer Tools">Developer Tools<ListBox.ItemIndicator /></ListBox.Item>
+
+                                        <ListBox.Item id="Productivity" textValue="Productivity">Productivity<ListBox.ItemIndicator /></ListBox.Item>
+
+                                        <ListBox.Item id="Hardware & Health" textValue="Hardware & Health">Hardware & Health<ListBox.ItemIndicator /></ListBox.Item>
+
+                                        <ListBox.Item id="Fintech & SaaS" textValue="Fintech & SaaS">Fintech & SaaS<ListBox.ItemIndicator /></ListBox.Item>
+
+                                        <ListBox.Item id="No-Code" textValue="No-Code">No-Code<ListBox.ItemIndicator /></ListBox.Item>
+
+                                        <ListBox.Item id="CleanTech" textValue="CleanTech">CleanTech<ListBox.ItemIndicator /></ListBox.Item>
+
+                                        <ListBox.Item id="Design Tools" textValue="Design Tools">Design Tools<ListBox.ItemIndicator /></ListBox.Item>
+
+                                        <ListBox.Item id="HR Tech" textValue="HR Tech">HR Tech<ListBox.ItemIndicator /></ListBox.Item>
+
+                                        <ListBox.Item id="Connectivity" textValue="Connectivity">Connectivity<ListBox.ItemIndicator /></ListBox.Item>
+
+                                        <ListBox.Item id="HealthTech" textValue="HealthTech">HealthTech<ListBox.ItemIndicator /></ListBox.Item>
+
+                                        <ListBox.Item id="Cybersecurity" textValue="Cybersecurity">Cybersecurity<ListBox.ItemIndicator /></ListBox.Item>
+
+                                        <ListBox.Item id="E-commerce" textValue="E-commerce">E-commerce<ListBox.ItemIndicator /></ListBox.Item>
+
+                                        <ListBox.Item id="EventTech" textValue="EventTech">EventTech<ListBox.ItemIndicator /></ListBox.Item>
+
+                                        <ListBox.Item id="AI Media" textValue="AI Media">AI Media<ListBox.ItemIndicator /></ListBox.Item>
+
                                     </ListBox>
                                 </Select.Popover>
                             </Select>
                         </div>
 
                         <div>
-                            <TextField
-                                isRequired
-                                name='budget'
-                                type="number"
-                            >
+                            <TextField isRequired name='budget' type="number">
                                 <Label className={`text-[18px] ${hankenGrotesk.className} font-semibold text-black`}>Estimated Budget</Label>
 
                                 <Input className="border shadow-none border-[#C7C4D8] py-3.5 placeholder:text-[#777587] px-4" placeholder="$0.00" />
@@ -129,11 +166,7 @@ const AddIdeaPage = () => {
                         </div>
                     </div>
 
-                    <TextField
-                        isRequired
-                        name='image'
-                        type="url"
-                    >
+                    <TextField isRequired name='image' type="url">
                         <Label className={`text-[18px] ${hankenGrotesk.className} font-semibold text-black`}>Image Url</Label>
 
                         <Input className="border shadow-none border-[#C7C4D8] py-3.5 placeholder:text-[#777587] px-4" placeholder="https://www.image.com" />
@@ -143,11 +176,7 @@ const AddIdeaPage = () => {
 
                     <div className='grid grid-cols-2 gap-4'>
                         <div>
-                            <TextField
-                                isRequired
-                                name='targetaudience'
-                                type="text"
-                            >
+                            <TextField isRequired name='targetaudience' type="text">
                                 <Label className={`text-[18px] ${hankenGrotesk.className} font-semibold text-black`}>Target Audience</Label>
 
                                 <Input className="border shadow-none border-[#C7C4D8] py-3.5 placeholder:text-[#777587] px-4" placeholder="E.g., Enterprise B2B, Students" />
@@ -157,10 +186,7 @@ const AddIdeaPage = () => {
                         </div>
 
                         <div>
-                            <TextField
-                                name='tags'
-                                type="text"
-                            >
+                            <TextField name='tags' type="text">
                                 <Label className={`text-[18px] ${hankenGrotesk.className} font-semibold text-black`}>Tags</Label>
 
                                 <Input className="border shadow-none border-[#C7C4D8] py-3.5 placeholder:text-[#777587] px-4" placeholder="Comma separated (e.g., saas, cloud, security)" />
@@ -170,13 +196,9 @@ const AddIdeaPage = () => {
                         </div>
                     </div>
 
-                    <TextField
-                        isRequired
-                        name='shortdes'
-                        maxLength={150}
-                        type="text"
-                    >
+                    <TextField isRequired name='shortdes' maxLength={150} type="text">
                         <Label className={`text-[18px] ${hankenGrotesk.className} font-semibold text-black`}>Short Description</Label>
+
                         <p className='text-sm text-[#464555] mb-2'>A brief elevator pitch (max 150 characters).</p>
 
                         <Input className="border shadow-none border-[#C7C4D8] py-3.5 placeholder:text-[#777587] px-4" placeholder="Summarize your idea in a few sentences..." />
@@ -184,18 +206,13 @@ const AddIdeaPage = () => {
                         <FieldError />
                     </TextField>
 
-
-
                     <div className='grid grid-cols-2 gap-6'>
                         <div>
-                            <TextField
-                                name='problemstatement' isRequired>
+                            <TextField name='problemstatement' isRequired>
                                 <Label className={`text-[18px] ${hankenGrotesk.className} font-semibold text-black`}>Problem Statement</Label>
-                                <TextArea
-                                    rows={7}
-                                    placeholder="What pain point does this solve?"
-                                    className="rounded-2xl px-4 pt-3 shadow-none border border-slate-300"
-                                />
+
+                                <TextArea rows={7} placeholder="What pain point does this solve?" className="rounded-2xl px-4 pt-3 shadow-none border border-slate-300" />
+
                                 <FieldError />
                             </TextField>
                         </div>
@@ -203,11 +220,9 @@ const AddIdeaPage = () => {
                         <div>
                             <TextField name='solution' isRequired>
                                 <Label className={`text-[18px] ${hankenGrotesk.className} font-semibold text-black`}>Proposed Solution</Label>
-                                <TextArea
-                                    rows={7}
-                                    placeholder="How does your idea address the problem?"
-                                    className="rounded-2xl px-4 pt-3 shadow-none border border-slate-300"
-                                />
+
+                                <TextArea rows={7} placeholder="How does your idea address the problem?" className="rounded-2xl px-4 pt-3 shadow-none border border-slate-300" />
+
                                 <FieldError />
                             </TextField>
                         </div>
@@ -215,22 +230,441 @@ const AddIdeaPage = () => {
 
                     <TextField name='description' isRequired>
                         <Label className={`text-[18px] ${hankenGrotesk.className} font-semibold text-black`}>Detailed Description</Label>
-                        <TextArea
-                            rows={9}
-                            placeholder="Provide full context, technical details, and background here..."
-                            className="rounded-2xl px-4 pt-3 shadow-none border border-slate-300"
-                        />
+
+                        <TextArea rows={9} placeholder="Provide full context, technical details, and background here..." className="rounded-2xl px-4 pt-3 shadow-none border border-slate-300" />
+
                         <FieldError />
                     </TextField>
 
-                    <div className="text-right">
-                        <Button className="rounded-2xl px-4 font-semibold bg-[#3525CD] py-6" type="submit"> <Upload /> Publish Idea </Button>
+
+                    <div className='flex justify-end mt-2'>
+
+                        <Button type="button" onClick={handleAddCollaboration} className={`px-4 py-2 w-fit text-right border-[#3525CD] font-medium text-[#3525CD] rounded-xl flex gap-1 items-center shadow-none border btn ${jetBrainsMono.className}`} > <Plus /> Add collaboration </Button>
+
+                    </div>
+
+
+                    <div className="flex flex-col gap-4">
+
+                        {collaborations.map((collab, index) => (
+                            <div key={index} className='flex items-center gap-3'>
+
+                                <div className="flex-1 border border-[#C7C4D8] p-6 rounded-2xl">
+
+                                    <div className="grid grid-cols-2 gap-2.5">
+
+                                        <TextField isRequired type="text">
+                                            <Label className={`text-[18px] ${hankenGrotesk.className} font-semibold text-black`}>Name</Label>
+
+                                            <Input value={collab.name} onChange={(e) => handleCollaborationChange(index, 'name', e.target.value)} className="border shadow-none border-[#C7C4D8] py-3.5 placeholder:text-[#777587] px-4"
+                                                placeholder="Enter your collaboration name."/>
+
+                                            <FieldError />
+                                        </TextField>
+
+                                        <TextField isRequired type="text">
+                                            <Label className={`text-[18px] ${hankenGrotesk.className} font-semibold text-black`}>Role</Label>
+
+                                            <Input value={collab.role} onChange={(e) => handleCollaborationChange(index, 'role', e.target.value)} className="border shadow-none border-[#C7C4D8] py-3.5 placeholder:text-[#777587] px-4"
+                                                placeholder="Enter your collaboration role."
+                                            />
+
+                                            <FieldError />
+                                        </TextField>
+                                    </div>
+
+                                    <div>
+                                        <TextField isRequired type="url">
+                                            <Label className={`text-[18px] mt-4 ${hankenGrotesk.className} font-semibold text-black`}>Collaboration Image Url</Label>
+
+                                            <Input value={collab.logo} onChange={(e) => handleCollaborationChange(index, 'logo', e.target.value)} className="border shadow-none border-[#C7C4D8] py-3.5 placeholder:text-[#777587] px-4"
+                                                placeholder="https://www.image.com"
+                                            />
+
+                                            <FieldError />
+                                        </TextField>
+                                    </div>
+                                </div>
+
+
+                                <button type="button" onClick={() => handleRemoveCollaboration(index)} className='text-[#FF383C] cursor-pointer hover:opacity-80 transition-opacity p-1'>
+                                    <MinusCircle />
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="text-right mt-4">
+
+                        <Button className="rounded-2xl px-4 font-semibold bg-[#3525CD] py-6 text-white" type="submit"> <Upload /> Publish Idea </Button>
+
                     </div>
                 </Form>
-
             </div>
         </div>
     );
 };
 
 export default AddIdeaPage;
+
+
+
+
+// 'use client'
+// import React, { useState } from 'react';
+// import { MinusCircle, Plus, Upload } from 'lucide-react';
+// import { Hanken_Grotesk, JetBrains_Mono } from 'next/font/google';
+// import { Button, Select, FieldError, Form, Input, Label, ListBox, TextField, TextArea } from "@heroui/react";
+// import { authClient } from '@/lib/auth-client';
+
+// const hankenGrotesk = Hanken_Grotesk({
+//     variable: "--font-hanken-grotesk",
+//     subsets: ["latin"],
+// });
+
+// const jetBrainsMono = JetBrains_Mono({
+//     variable: "--font-hanken-grotesk",
+//     subsets: ["latin"],
+// });
+
+
+// const AddIdeaPage = () => {
+
+//     const { data: session, isPending, error } = authClient.useSession()
+//     const user = session?.user
+
+//     const onSubmit = async (e) => {
+//         e.preventDefault()
+//         const formData = new FormData(e.currentTarget)
+//         const ideaInfo = Object.fromEntries(formData.entries())
+//         const { title, category, budget, image, targetaudience, tags, shortdes, problemstatement, solution, description, logo, name, role } = ideaInfo
+//         const collaboration = {
+//             name,
+//             logo,
+//             role
+//         }
+//         const ideaInfoWithUser = {
+//             userId: user?.id,
+//             email: user?.email,
+//             name: user?.name,
+//             userImage: user?.image,
+//             title: title,
+//             category: category,
+//             budget: budget,
+//             tags: tags.split(','),
+//             image: image,
+//             targetaudience: targetaudience,
+//             shortdescription: shortdes,
+//             problemstatement: problemstatement,
+//             solution: solution,
+//             description: description,
+//             createdAt: new Date().toISOString(),
+//             collaborations: [collaboration]
+//         }
+//         const res = await fetch('http://localhost:8000/ideas', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-type': 'application/json'
+//             },
+//             body: JSON.stringify(ideaInfoWithUser)
+//         })
+//         const data = await res.json()
+//         console.log(ideaInfoWithUser);
+//     }
+
+//     const [addCollaboration, setAddCollaboration] = useState(false);
+
+//     return (
+//         <div data-aos="fade-up" className='w-7/12 mx-auto py-16 px-12'>
+//             <div className=''>
+//                 <h2 className={`text-5xl font-bold ${hankenGrotesk.className}`}>Publish your Idea</h2>
+//                 <p className='text-[18px] mb-8 text-[#464555] mt-2'>Formalize your concept and secure it in the vault.</p>
+//             </div>
+//             <div className='shadow-[0_20px_100px_rgba(79,70,229,0.12)] border border-[#C7C4D8] rounded-2xl p-8'>
+//                 <Form onSubmit={onSubmit} className="flex flex-col gap-4">
+//                     <TextField
+//                         isRequired
+//                         name='title'
+//                         type="text"
+//                     >
+//                         <Label className={`text-[18px] ${hankenGrotesk.className} font-semibold text-black`}>Idea Title</Label>
+
+//                         <Input className="border shadow-none border-[#C7C4D8] py-3.5 placeholder:text-[#777587] px-4" placeholder="E.g., Quantum Encrypted Cloud Storage" />
+
+//                         <FieldError />
+//                     </TextField>
+
+//                     <div className='grid grid-cols-2 gap-4'>
+//                         <div>
+//                             <Select
+//                                 name='category'
+//                                 isRequired
+
+//                                 placeholder="Select category"
+//                             >
+//                                 <Label className='text-black text-[16px] font-semibold border-none'>Category</Label>
+
+//                                 <Select.Trigger className="rounded-2xl py-3.5 px-4 shadow-none border border-slate-300">
+//                                     <Select.Value />
+//                                     <Select.Indicator />
+//                                 </Select.Trigger>
+
+//                                 <Select.Popover>
+//                                     <ListBox>
+//                                         <ListBox.Item id="AI Tools" textValue="AI Tools">
+//                                             AI Tools
+//                                             <ListBox.ItemIndicator />
+//                                         </ListBox.Item>
+
+//                                         <ListBox.Item id="Real Estate Tech" textValue="Real Estate Tech">
+//                                             Real Estate Tech
+//                                             <ListBox.ItemIndicator />
+//                                         </ListBox.Item>
+
+//                                         <ListBox.Item id="Developer Tools" textValue="Developer Tools">
+//                                             Developer Tools
+//                                             <ListBox.ItemIndicator />
+//                                         </ListBox.Item>
+
+//                                         <ListBox.Item id="Productivity" textValue="Productivity">
+//                                             Productivity
+//                                             <ListBox.ItemIndicator />
+//                                         </ListBox.Item>
+
+//                                         <ListBox.Item id="Hardware & Health" textValue="Hardware & Health">
+//                                             Hardware & Health
+//                                             <ListBox.ItemIndicator />
+//                                         </ListBox.Item>
+
+//                                         <ListBox.Item id="Fintech & SaaS" textValue="Fintech & SaaS">
+//                                             Fintech & SaaS
+//                                             <ListBox.ItemIndicator />
+//                                         </ListBox.Item>
+
+//                                         <ListBox.Item id="No-Code" textValue="No-Code">
+//                                             No-Code
+//                                             <ListBox.ItemIndicator />
+//                                         </ListBox.Item>
+
+//                                         <ListBox.Item id="No-Code" textValue="No-Code">
+//                                             No-Code
+//                                             <ListBox.ItemIndicator />
+//                                         </ListBox.Item>
+
+//                                         <ListBox.Item id="CleanTech" textValue="CleanTech">
+//                                             CleanTech
+//                                             <ListBox.ItemIndicator />
+//                                         </ListBox.Item>
+
+//                                         <ListBox.Item id="Design Tools" textValue="Design Tools">
+//                                             Design Tools
+//                                             <ListBox.ItemIndicator />
+//                                         </ListBox.Item>
+
+//                                         <ListBox.Item id="HR Tech" textValue="HR Tech">
+//                                             HR Tech
+//                                             <ListBox.ItemIndicator />
+//                                         </ListBox.Item>
+
+//                                         <ListBox.Item id="Connectivity" textValue="Connectivity">
+//                                             Connectivity
+//                                             <ListBox.ItemIndicator />
+//                                         </ListBox.Item>
+
+//                                         <ListBox.Item id="HealthTech" textValue="HealthTech">
+//                                             HealthTech
+//                                             <ListBox.ItemIndicator />
+//                                         </ListBox.Item>
+
+//                                         <ListBox.Item id="Cybersecurity" textValue="Cybersecurity">
+//                                             Cybersecurity
+//                                             <ListBox.ItemIndicator />
+//                                         </ListBox.Item>
+
+//                                         <ListBox.Item id="E-commerce" textValue="E-commerce">
+//                                             E-commerce
+//                                             <ListBox.ItemIndicator />
+//                                         </ListBox.Item>
+
+//                                         <ListBox.Item id="EventTech" textValue="EventTech">
+//                                             EventTech
+//                                             <ListBox.ItemIndicator />
+//                                         </ListBox.Item>
+
+//                                         <ListBox.Item id="AI Media" textValue="AI Media">
+//                                             AI Media
+//                                             <ListBox.ItemIndicator />
+//                                         </ListBox.Item>
+
+//                                     </ListBox>
+//                                 </Select.Popover>
+//                             </Select>
+//                         </div>
+
+//                         <div>
+//                             <TextField
+//                                 isRequired
+//                                 name='budget'
+//                                 type="number"
+//                             >
+//                                 <Label className={`text-[18px] ${hankenGrotesk.className} font-semibold text-black`}>Estimated Budget</Label>
+
+//                                 <Input className="border shadow-none border-[#C7C4D8] py-3.5 placeholder:text-[#777587] px-4" placeholder="$0.00" />
+
+//                                 <FieldError />
+//                             </TextField>
+//                         </div>
+//                     </div>
+
+//                     <TextField
+//                         isRequired
+//                         name='image'
+//                         type="url"
+//                     >
+//                         <Label className={`text-[18px] ${hankenGrotesk.className} font-semibold text-black`}>Image Url</Label>
+
+//                         <Input className="border shadow-none border-[#C7C4D8] py-3.5 placeholder:text-[#777587] px-4" placeholder="https://www.image.com" />
+
+//                         <FieldError />
+//                     </TextField>
+
+//                     <div className='grid grid-cols-2 gap-4'>
+//                         <div>
+//                             <TextField
+//                                 isRequired
+//                                 name='targetaudience'
+//                                 type="text"
+//                             >
+//                                 <Label className={`text-[18px] ${hankenGrotesk.className} font-semibold text-black`}>Target Audience</Label>
+
+//                                 <Input className="border shadow-none border-[#C7C4D8] py-3.5 placeholder:text-[#777587] px-4" placeholder="E.g., Enterprise B2B, Students" />
+
+//                                 <FieldError />
+//                             </TextField>
+//                         </div>
+
+//                         <div>
+//                             <TextField
+//                                 name='tags'
+//                                 type="text"
+//                             >
+//                                 <Label className={`text-[18px] ${hankenGrotesk.className} font-semibold text-black`}>Tags</Label>
+
+//                                 <Input className="border shadow-none border-[#C7C4D8] py-3.5 placeholder:text-[#777587] px-4" placeholder="Comma separated (e.g., saas, cloud, security)" />
+
+//                                 <FieldError />
+//                             </TextField>
+//                         </div>
+//                     </div>
+
+//                     <TextField
+//                         isRequired
+//                         name='shortdes'
+//                         maxLength={150}
+//                         type="text"
+//                     >
+//                         <Label className={`text-[18px] ${hankenGrotesk.className} font-semibold text-black`}>Short Description</Label>
+//                         <p className='text-sm text-[#464555] mb-2'>A brief elevator pitch (max 150 characters).</p>
+
+//                         <Input className="border shadow-none border-[#C7C4D8] py-3.5 placeholder:text-[#777587] px-4" placeholder="Summarize your idea in a few sentences..." />
+
+//                         <FieldError />
+//                     </TextField>
+
+
+
+//                     <div className='grid grid-cols-2 gap-6'>
+//                         <div>
+//                             <TextField
+//                                 name='problemstatement' isRequired>
+//                                 <Label className={`text-[18px] ${hankenGrotesk.className} font-semibold text-black`}>Problem Statement</Label>
+//                                 <TextArea
+//                                     rows={7}
+//                                     placeholder="What pain point does this solve?"
+//                                     className="rounded-2xl px-4 pt-3 shadow-none border border-slate-300"
+//                                 />
+//                                 <FieldError />
+//                             </TextField>
+//                         </div>
+
+//                         <div>
+//                             <TextField name='solution' isRequired>
+//                                 <Label className={`text-[18px] ${hankenGrotesk.className} font-semibold text-black`}>Proposed Solution</Label>
+//                                 <TextArea
+//                                     rows={7}
+//                                     placeholder="How does your idea address the problem?"
+//                                     className="rounded-2xl px-4 pt-3 shadow-none border border-slate-300"
+//                                 />
+//                                 <FieldError />
+//                             </TextField>
+//                         </div>
+//                     </div>
+
+//                     <TextField name='description' isRequired>
+//                         <Label className={`text-[18px] ${hankenGrotesk.className} font-semibold text-black`}>Detailed Description</Label>
+//                         <TextArea
+//                             rows={9}
+//                             placeholder="Provide full context, technical details, and background here..."
+//                             className="rounded-2xl px-4 pt-3 shadow-none border border-slate-300"
+//                         />
+//                         <FieldError />
+//                     </TextField>
+
+//                     <div className='flex justify-end'>
+//                         <Button onClick={() => setAddCollaboration(true)} className={`px-4 py-2 w-fit text-right border-[#3525CD] font-medium text-[#3525CD] rounded-xl flex gap-1 items-center shadow-none border btn ${jetBrainsMono.className}`} > <Plus /> Add collaboration </Button>
+
+//                     </div>
+
+//                     <div>
+//                         {addCollaboration && (
+//                             <div className='flex items-center gap-3'>
+//                                 <div className="mt-2 flex-1 mb-5 border border-[#C7C4D8] p-6 rounded-2xl">
+//                                     <div className="grid grid-cols-2 gap-2.5">
+//                                         <TextField isRequired name='name' type="text">
+
+//                                             <Label className={`text-[18px] ${hankenGrotesk.className} font-semibold text-black`}>Name</Label>
+
+//                                             <Input className="border shadow-none border-[#C7C4D8] py-3.5 placeholder:text-[#777587] px-4" placeholder="Enter your colllaboration name." />
+
+//                                             <FieldError />
+//                                         </TextField>
+
+//                                         <TextField isRequired name='role' type="text">
+
+//                                             <Label className={`text-[18px] ${hankenGrotesk.className} font-semibold text-black`}>Role</Label>
+
+//                                             <Input className="border shadow-none border-[#C7C4D8] py-3.5 placeholder:text-[#777587] px-4" placeholder="Enter your colllaboration role." />
+
+//                                             <FieldError />
+//                                         </TextField>
+//                                     </div>
+
+//                                     <div>
+//                                         <TextField isRequired name='logo' type="url">
+//                                             <Label className={`text-[18px] mt-4 ${hankenGrotesk.className} font-semibold text-black`}>Collaboration Image Url</Label>
+
+//                                             <Input className="border shadow-none border-[#C7C4D8] py-3.5 placeholder:text-[#777587] px-4" placeholder="https://www.image.com" />
+
+//                                             <FieldError />
+//                                         </TextField>
+//                                     </div>
+//                                 </div>
+
+//                                 <div onClick={() => setAddCollaboration(false)} className='text-[#FF383C] cursor-pointer'>
+//                                     <MinusCircle />
+//                                 </div>
+//                             </div>
+//                         )}
+//                     </div>
+
+//                     <div className="text-right">
+//                         <Button className="rounded-2xl px-4 font-semibold bg-[#3525CD] py-6" type="submit"> <Upload /> Publish Idea </Button>
+//                     </div>
+//                 </Form>
+
+//             </div>
+//         </div>
+//     );
+// };
+
+// export default AddIdeaPage;

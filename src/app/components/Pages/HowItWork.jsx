@@ -25,7 +25,7 @@ const HowItWork = () => {
 
                         <div className="hidden lg:block absolute top-12 left-50 right-50 h-0.5 bg-[#E2E4FF]" />
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 relative">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-15 relative">
 
                             <div className="flex flex-col items-center text-center">
 

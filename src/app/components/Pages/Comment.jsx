@@ -18,58 +18,62 @@ const jetBrainsMono = JetBrains_Mono({
 
 const Comment = ({ comments }) => {
 
-    const [isEditing, setIsEditing] = useState(false);
+    const [editingId, setEditingId] = useState(null);
 
     return (
         <div>
             {
-                comments.map(comment =>
-                    <div className='border border-[#D7D3F5] flex gap-3 rounded-2xl p-5 mt-4.5' key={comment._id}>
-                        <div>
-                            <Avatar>
-                                <Avatar.Image alt={comment?.name} src={comment?.image} />
-                                <Avatar.Fallback className='text-xl'>{comment?.name[0]}</Avatar.Fallback>
-                            </Avatar>
-                        </div>
+                comments.map(comment => {
+                    const isEditing = editingId === comment._id;
 
-                        <div className='w-full'>
-                            <div className='flex mb-1.5 justify-between items-center'>
-                                <p className={`${hankenGrotesk.className} text-xl font-semibold text-[#3525CD] `}>{comment?.name}</p>
-
-                                <p className={`${jetBrainsMono.className} text-sm`}>
-                                    {new Date().toLocaleString("en-US", {
-                                        month: 'long',
-                                        year: 'numeric',
-                                        day: 'numeric'
-                                    })}
-                                </p>
-                            </div>
-
+                    return (
+                        <div className='border border-[#D7D3F5] flex gap-3 rounded-2xl pt-5 pl-5 pr-5 mt-4.5' key={comment._id}>
                             <div>
-                                <p className="text-[#464555]">{comment.comment}</p>
+                                <Avatar>
+                                    <Avatar.Image alt={comment?.name} src={comment?.image} />
+                                    <Avatar.Fallback className='text-xl'>{comment?.name}</Avatar.Fallback>
+                                </Avatar>
                             </div>
 
-                            <div className='flex gap-4 text-[15px] items-center font-semibold justify-end'>
-                                {!isEditing
-                                    ?
+                            <div className='w-full'>
+                                <div className='flex mb-1.5 justify-between items-center'>
+                                    <p className={`${hankenGrotesk.className} text-xl font-semibold text-[#3525CD] `}>{comment?.name}</p>
 
-                                    <p onClick={() => setIsEditing(true)} className="cursor-pointer text-blue-600" > Edit </p>
-                                    :
-
-                                    <p onClick={() => setIsEditing(false)} className="cursor-pointer text-blue-600" >cancle</p>
-                                
-                                }
-                                <DeleteComment comment={comment} />
-                            </div>
-
-                            {isEditing && (
-                                <div className="mt-2">
-                                    <CommentEdit comment={comment} />
+                                    <p className={`${jetBrainsMono.className} text-sm`}>
+                                        {new Date().toLocaleString("en-US", {
+                                            month: 'long',
+                                            year: 'numeric',
+                                            day: 'numeric'
+                                        })}
+                                    </p>
                                 </div>
-                            )}
+
+                                <div>
+                                    <p className="text-[#464555]">{comment.comment}</p>
+                                </div>
+
+                                <div className='flex gap-4 text-[15px] items-center font-semibold justify-end'>
+                                    {!isEditing
+                                        ?
+
+                                        <p onClick={() => setEditingId(comment._id)} className="cursor-pointer text-blue-600" > Edit </p>
+                                        :
+
+                                        <p onClick={() => setEditingId(null)} className="cursor-pointer text-blue-600" >cancle</p>
+
+                                    }
+                                    <DeleteComment comment={comment} />
+                                </div>
+
+                                {isEditing && (
+                                    <div className="mt-2 mb-5">
+                                        <CommentEdit comment={comment} />
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                    </div>
-                )
+                    )
+                })
             }
         </div>
     );

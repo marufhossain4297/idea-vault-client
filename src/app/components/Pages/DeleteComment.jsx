@@ -6,6 +6,7 @@ const DeleteComment = ({ comment }) => {
     const { _id } = comment
 
     const deleteComm = async () => {
+        console.log(_id);
         const res = await fetch(`http://localhost:8000/comment/${_id}`, {
             method: 'DELETE'
         })

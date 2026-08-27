@@ -3,6 +3,7 @@ import "./globals.css";
 import NavBar from "./components/sheard/NavBar";
 import Footer from "./components/sheard/Footer";
 import AOSProvider from "./components/Pages/AOSProvider";
+import { Toaster } from "sonner";
 
 const inter = Inter({
   variable: "--font-geist-sans",
@@ -27,6 +28,7 @@ export default function RootLayout({ children }) {
             <NavBar />
             {children}
             <Footer />
+            <Toaster richColors position="top-right" />
           </main>
         </AOSProvider>
       </body>

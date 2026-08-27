@@ -8,6 +8,9 @@ import { HiOutlinePencilAlt } from "react-icons/hi";
 import { FaTriangleExclamation } from "react-icons/fa6";
 import { BsFillLightbulbFill } from "react-icons/bs";
 import CommentPage from '@/app/components/Pages/CommentPage';
+import { AlignLeft, FileText, UserPlus, Users } from 'lucide-react';
+import Collaboratioin from '@/app/components/Pages/Collaboratioin';
+import Price from '@/app/components/Pages/Price';
 
 const hankenGrotesk = Hanken_Grotesk({
     variable: "--font-hanken-grotesk",
@@ -33,10 +36,10 @@ const DetailsPage = async ({ params }) => {
     const { budget, category, collaborations, createdAt, description, email, image, name, problemstatement, shortdescription, solution, tags, targetaudience, title, userId, userImage } = idea
 
     return (
-        <div className='my-12 w-11/12 mx-auto'>
+        <div data-aos="fade-up" className='my-12 w-11/12 mx-auto'>
 
             <div className='flex justify-between items-center'>
-                <Link href={'/ideas'} className='flex items-center gap-1 text-[#464555]'> <FaArrowLeft /> Back to Vault</Link>
+                <Link href={'/ideas'} className='flex items-center gap-3 text-[#464555]'> <FaArrowLeft /> Back to Vault</Link>
 
                 <div className='flex items-center gap-4'>
                     <Link href={'/sign-up'}>
@@ -75,8 +78,8 @@ const DetailsPage = async ({ params }) => {
             </div>
 
             <div>
-                <h2 className={`${hankenGrotesk.className} text-5xl font-bold`}>{title}</h2>
-                <div className='my-12 relative h-163.75 w-full'>
+                <h2 className={`${hankenGrotesk.className} md:text-4xl text-3xl lg:text-5xl font-bold`}>{title}</h2>
+                <div className='my-12 relative md:h-115 lg:h-163.75 h-70 w-full'>
                     <Image
                         src={image}
                         alt={title}
@@ -86,18 +89,75 @@ const DetailsPage = async ({ params }) => {
                 </div>
             </div>
 
-            <div className='grid grid-cols-12'>
-                <div className='col-span-9'>
-                    <div className='p-8 mb-18 rounded-2xl border border-[#C7C4D8]'>
+
+            <div className='grid gap-6 lg:grid-cols-12'>
+
+                <div className='lg:col-span-8'>
+
+                    <div className='grid lg:grid-cols-2 gap-4'>
+                        <div className='border border-[#C7C4D8] rounded-2xl p-6 mb-8'>
+                            <div className="flex gap-2.5 items-center mb-4">
+                                <FileText className="w-5 h-5 text-[#8f4953]" />
+                                <h2 className='text-xl font-semibold text-[#8f4953]'>Description</h2>
+                            </div>
+                            <p className='text-[#464555]'>{description}</p>
+                        </div>
+
+                        <div className='border border-[#C7C4D8] rounded-2xl p-6 mb-8'>
+                            <div className="flex gap-2.5 items-center mb-4">
+                                <AlignLeft className="w-5 h-5" />
+                                <h2 className='text-xl font-semibold'>Short Description</h2>
+                            </div>
+                            <p className='text-[#464555]'>{shortdescription}</p>
+                        </div>
+                    </div>
+
+                    <div className='p-8 mb-6 lg:mb-18 rounded-2xl border border-[#C7C4D8]'>
                         <p className='text-[#464555] mb-6'>
-                            <span className='text-[#3525CD] flex gap-3 text-xl font-semibold mb-4'><FaTriangleExclamation /> The Problem</span>
+                            <span className='text-[#3525CD] items-center flex gap-3 text-xl font-semibold mb-4'><FaTriangleExclamation /> The Problem</span>
                             {problemstatement}
                         </p>
 
                         <p className='text-[#464555] pt-8 border-t border-[#C7C4D8]'>
-                            <span className='text-[#00687A] flex gap-3 text-xl font-semibold mb-4'><BsFillLightbulbFill /> Proposed Solution</span>
+                            <span className='text-[#00687A] items-center flex gap-3 text-xl font-semibold mb-4'><BsFillLightbulbFill /> Proposed Solution</span>
                             {solution}
                         </p>
+                    </div>
+
+                    <div className='lg:hidden mb-7'>
+
+                        <div className='p-6 mb-6 rounded-2xl border border-[#C7C4D8]'>
+                            <h2 className={`${hankenGrotesk.className} text-xl font-semibold border-b border-[#C7C4D8] pb-2`}>Investment Metrics</h2>
+                            <div>
+                                <Price idea={idea} key={idea._id} />
+                            </div>
+                        </div>
+
+                        <div className='p-6 rounded-2xl border border-[#C7C4D8]'>
+                            <h2 className={`${hankenGrotesk.className} text-xl font-semibold border-b border-[#C7C4D8] pb-2`}>Collaborators</h2>
+                            <div>
+                                {
+                                    collaborations == 0
+
+                                        ?
+                                        <div className="flex flex-col items-center justify-center py-6 text-center">
+                                            <div className="w-12 h-12 rounded-full bg-[#3525CD]/10 flex items-center justify-center text-[#3525CD] mb-3">
+                                                <UserPlus className="w-6 h-6" />
+                                            </div>
+                                            <p className="text-[#1E1A4D] font-semibold text-base mb-1">
+                                                No collaborators yet
+                                            </p>
+                                            <p className="text-[#6B7280] text-sm max-w-[240px]">
+                                                Invite team members or developers to work on this idea together.
+                                            </p>
+                                        </div>
+
+                                        :
+                                        collaborations?.map(collaboration => <Collaboratioin key={collaboration.name} collaboration={collaboration} />)
+                                }
+                            </div>
+                        </div>
+
                     </div>
 
                     <div>
@@ -105,7 +165,39 @@ const DetailsPage = async ({ params }) => {
                     </div>
                 </div>
 
-                <div className='col-span-3'>
+                <div className='lg:col-span-4 lg:block hidden'>
+
+                    <div className='p-6 mb-6 rounded-2xl border border-[#C7C4D8]'>
+                        <h2 className={`${hankenGrotesk.className} text-xl font-semibold border-b border-[#C7C4D8] pb-2`}>Investment Metrics</h2>
+                        <div>
+                            <Price idea={idea} key={idea._id} />
+                        </div>
+                    </div>
+
+                    <div className='p-6 rounded-2xl border border-[#C7C4D8]'>
+                        <h2 className={`${hankenGrotesk.className} text-xl font-semibold border-b border-[#C7C4D8] pb-2`}>Collaborators</h2>
+                        <div>
+                            {
+                                collaborations == 0
+
+                                    ?
+                                    <div className="flex flex-col items-center justify-center py-6 text-center">
+                                        <div className="w-12 h-12 rounded-full bg-[#3525CD]/10 flex items-center justify-center text-[#3525CD] mb-3">
+                                            <UserPlus className="w-6 h-6" />
+                                        </div>
+                                        <p className="text-[#1E1A4D] font-semibold text-base mb-1">
+                                            No collaborators yet
+                                        </p>
+                                        <p className="text-[#6B7280] text-sm max-w-[240px]">
+                                            Invite team members or developers to work on this idea together.
+                                        </p>
+                                    </div>
+
+                                    :
+                                    collaborations?.map(collaboration => <Collaboratioin key={collaboration.name} collaboration={collaboration} />)
+                            }
+                        </div>
+                    </div>
 
                 </div>
             </div>

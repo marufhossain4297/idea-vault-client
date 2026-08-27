@@ -2,7 +2,7 @@
 import React from 'react';
 import { Hanken_Grotesk, JetBrains_Mono } from 'next/font/google';
 import { Avatar, Button, FieldError, Label, TextArea, TextField } from '@heroui/react';
-import { Upload } from 'lucide-react';
+import { MessageSquare, Upload } from 'lucide-react';
 import { authClient } from '@/lib/auth-client';
 import Comment from './Comment';
 
@@ -73,7 +73,25 @@ const CommentPage = ({ comments, id }) => {
             </div>
 
             <div>
-                <Comment comments={comments} />
+                {comments.length === 0
+                    ?
+                    <div className="bg-[#EAEFFF]/60 border border-[#C7C4D8] rounded-2xl py-23 px-6 flex flex-col items-center justify-center text-center mt-6 gap-3">
+
+                        <div className="w-12 h-12 rounded-full bg-[#3525CD]/10 flex items-center justify-center text-[#3525CD]">
+                            <MessageSquare className="w-6 h-6" />
+                        </div>
+
+                        <div className="space-y-1">
+                            <h3 className={`${hankenGrotesk.className} text-3xl font-bold text-[#1E1A4D]`}>
+                                No comments yet
+                            </h3>
+                            <p className="text-[17px] text-[#66637A]">
+                                Be the first to share your thoughts on this idea!
+                            </p>
+                        </div>
+                    </div>
+                    :
+                    <Comment comments={comments} />}
             </div>
         </div>
     );
