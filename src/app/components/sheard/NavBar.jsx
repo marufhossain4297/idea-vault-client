@@ -28,8 +28,7 @@ const NavBar = () => {
         <>
             <NavLink href={'/'}>Home</NavLink>
             <NavLink href={'/ideas'}>Ideas</NavLink>
-            {/* <NavLink href={'/add-idea'}>Add Idea</NavLink> */}
-            <NavLink href={'/profile'}>Dashboard</NavLink>
+            {/*  */}
         </>
     )
 
@@ -43,6 +42,7 @@ const NavBar = () => {
                 <div className='py-6 hidden lg:block'>
                     <ul className='text-[#464555] flex items-center gap-6'>
                         {links}
+                        <NavLink href={'/profile'}>Dashboard</NavLink>
                     </ul>
                 </div>
 
@@ -68,7 +68,7 @@ const NavBar = () => {
 
                                         <DashboardNavLink className='flex items-center text-[17px] gap-2' href={'/profile'}><FaUser /> Profile</DashboardNavLink>
 
-                                        <button onClick={async () => await authClient.signOut()} className='px-4 py-2 text-white font-semibold bg-[#FF383C] rounded-xl shadow-none border-none btn'>Sign Out <TbLogout className='text-[18px]'/></button>
+                                        <button onClick={async () => await authClient.signOut()} className='px-4 py-2 text-white font-semibold bg-[#FF383C] rounded-xl shadow-none border-none btn'>Sign Out <TbLogout className='text-[18px]' /></button>
 
                                     </ul>
                                 </div>
@@ -93,7 +93,7 @@ const NavBar = () => {
                 <Drawer>
                     <Button className="bg-transparent text-black"><IoMenu /></Button>
                     <Drawer.Backdrop>
-                        <Drawer.Content placement="right">
+                        <Drawer.Content placement="left">
                             <Drawer.Dialog>
 
                                 <Drawer.Header>
@@ -146,6 +146,15 @@ const NavBar = () => {
                                     <div>
                                         <ul className='text-[17px] flex flex-col space-y-6 text-[#3A3A3A] font-semibold'>
                                             {links}
+                                            {user ?
+                                                <>
+                                                    <NavLink href={'/add-idea'}>Add Idea</NavLink>
+                                                    <NavLink href={'/my-ideas'}>My Ideas</NavLink>
+                                                    <NavLink href={'/my-interactions'}>My Interactions</NavLink>
+                                                    <NavLink href={'/profile'}>Profile</NavLink>
+                                                </>
+                                                : ''
+                                            }
                                         </ul>
                                     </div>
 
