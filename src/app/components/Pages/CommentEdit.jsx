@@ -41,7 +41,7 @@ const CommentEdit = ({ comment }) => {
     return (
         <div>
             <div className='p-4 border rounded-2xl border-[#C7C4D8]'>
-                <form onSubmit={onSubmit} className='flex items-center gap-3'>
+                <form onSubmit={onSubmit} className='flex flex-wrap items-center gap-3'>
                     <TextField
                         name='comment' defaultValue={comment?.comment} className="flex-1" isRequired>
                         <TextArea

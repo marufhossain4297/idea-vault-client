@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { RiVerifiedBadgeFill } from "react-icons/ri";
 import { Hanken_Grotesk, JetBrains_Mono } from 'next/font/google';
 import { ProgressBar, ToggleButton } from '@heroui/react';
-import { AiOutlineLike } from "react-icons/ai";
+import { AiFillDislike, AiOutlineDislike, AiOutlineLike } from "react-icons/ai";
 import { AiFillLike } from "react-icons/ai";
 
 
@@ -21,6 +21,8 @@ const jetBrainsMono = JetBrains_Mono({
 
 const Price = ({ idea }) => {
     const [isSelected, setIsSelected] = useState(false);
+    const [isSelectedDisLike, setIsSelectedDisLike] = useState(false);
+
     return (
         <div>
             <div>
@@ -61,7 +63,7 @@ const Price = ({ idea }) => {
                     </div>
                 </div>
             }
-            <div>
+            <div className='grid grid-cols-2 gap-2 items-center'>
                 
                 <ToggleButton className={`${hankenGrotesk.className} text-[17px] font-semibold bg-none w-full rounded-md mt-4 text-white bg-[#571AC0]`} isSelected={isSelected} onChange={setIsSelected}>
                     {({ isSelected: selected }) => (
@@ -72,6 +74,15 @@ const Price = ({ idea }) => {
                     )}
                 </ToggleButton>
 
+
+                <ToggleButton className={`${hankenGrotesk.className} text-[17px] font-semibold bg-none w-full rounded-md mt-4 text-white bg-[#571AC0]`} isSelected={isSelectedDisLike} onChange={setIsSelectedDisLike}>
+                    {({ isSelected: selected }) => (
+                        <>
+                            {selected ? <AiFillDislike /> : <AiOutlineDislike />}
+                            {selected ? "Disliked" : "Dislike"}
+                        </>
+                    )}
+                </ToggleButton>
             </div>
         </div>
     );

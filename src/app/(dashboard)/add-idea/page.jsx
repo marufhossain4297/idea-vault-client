@@ -24,7 +24,7 @@ const AddIdeaPage = () => {
 
     const [collaborations, setCollaborations] = useState([]);
 
-    
+
     const handleAddCollaboration = () => {
         setCollaborations((prev) => [...prev, { name: '', role: '', logo: '' }]);
     };
@@ -75,25 +75,25 @@ const AddIdeaPage = () => {
             body: JSON.stringify(ideaInfoWithUser)
         });
         const data = await res.json();
-        if(data){
+        if (data) {
             toast.success('Idea added success')
             redirect('/ideas')
         }
-        else{
+        else {
             toast.error(error.massage)
         }
     };
 
     return (
-        <div data-aos="fade-up" className='w-7/12 mx-auto py-16 px-12'>
+        <div data-aos="fade-up" className='w-11/12 mx-auto py-16 lg:px-12'>
 
             <div>
-                <h2 className={`text-5xl font-bold ${hankenGrotesk.className}`}>Publish your Idea</h2>
+                <h2 className={`md:text-5xl text-4xl font-bold ${hankenGrotesk.className}`}>Publish your Idea</h2>
 
                 <p className='text-[18px] mb-8 text-[#464555] mt-2'>Formalize your concept and secure it in the vault.</p>
             </div>
 
-            <div className='shadow-[0_20px_100px_rgba(79,70,229,0.12)] border border-[#C7C4D8] rounded-2xl p-8'>
+            <div className='shadow-[0_20px_100px_rgba(79,70,229,0.12)] border border-[#C7C4D8] rounded-2xl p-6 md:p-8'>
 
                 <Form onSubmit={onSubmit} className="flex flex-col gap-4">
 
@@ -105,7 +105,7 @@ const AddIdeaPage = () => {
                         <FieldError />
                     </TextField>
 
-                    <div className='grid grid-cols-2 gap-4'>
+                    <div className='grid md:grid-cols-2 gap-4'>
                         <div>
                             <Select name='category' isRequired placeholder="Select category">
                                 <Label className='text-black text-[16px] font-semibold border-none'>Category</Label>
@@ -174,7 +174,7 @@ const AddIdeaPage = () => {
                         <FieldError />
                     </TextField>
 
-                    <div className='grid grid-cols-2 gap-4'>
+                    <div className='grid md:grid-cols-2 gap-4'>
                         <div>
                             <TextField isRequired name='targetaudience' type="text">
                                 <Label className={`text-[18px] ${hankenGrotesk.className} font-semibold text-black`}>Target Audience</Label>
@@ -206,7 +206,7 @@ const AddIdeaPage = () => {
                         <FieldError />
                     </TextField>
 
-                    <div className='grid grid-cols-2 gap-6'>
+                    <div className='grid md:grid-cols-2 gap-6'>
                         <div>
                             <TextField name='problemstatement' isRequired>
                                 <Label className={`text-[18px] ${hankenGrotesk.className} font-semibold text-black`}>Problem Statement</Label>
@@ -247,17 +247,17 @@ const AddIdeaPage = () => {
                     <div className="flex flex-col gap-4">
 
                         {collaborations.map((collab, index) => (
-                            <div key={index} className='flex items-center gap-3'>
+                            <div key={index} className='md:flex items-center gap-3'>
 
                                 <div className="flex-1 border border-[#C7C4D8] p-6 rounded-2xl">
 
-                                    <div className="grid grid-cols-2 gap-2.5">
+                                    <div className="grid md:grid-cols-2 gap-2.5">
 
                                         <TextField isRequired type="text">
                                             <Label className={`text-[18px] ${hankenGrotesk.className} font-semibold text-black`}>Name</Label>
 
                                             <Input value={collab.name} onChange={(e) => handleCollaborationChange(index, 'name', e.target.value)} className="border shadow-none border-[#C7C4D8] py-3.5 placeholder:text-[#777587] px-4"
-                                                placeholder="Enter your collaboration name."/>
+                                                placeholder="Enter your collaboration name." />
 
                                             <FieldError />
                                         </TextField>
@@ -287,9 +287,17 @@ const AddIdeaPage = () => {
                                 </div>
 
 
-                                <button type="button" onClick={() => handleRemoveCollaboration(index)} className='text-[#FF383C] cursor-pointer hover:opacity-80 transition-opacity p-1'>
-                                    <MinusCircle />
-                                </button>
+                                <div className='lg:flex hidden mt-5 justify-end'>
+                                    <button type="button" onClick={() => handleRemoveCollaboration(index)} className='text-[#FF383C] cursor-pointer hover:opacity-80 transition-opacity p-1'>
+                                        <MinusCircle />
+                                    </button>
+                                </div>
+
+                                <div className='flex lg:hidden mt-5 justify-end'>
+                                    <button type="button" onClick={() => handleRemoveCollaboration(index)} className='bg-[#FF383C] text-white font-medium flex gap-1 items-center p-2.5 cursor-pointer hover:opacity-80 transition-opacity rounded-2xl'>
+                                        <MinusCircle /> Remove
+                                    </button>
+                                </div>
                             </div>
                         ))}
                     </div>

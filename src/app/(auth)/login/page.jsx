@@ -46,9 +46,9 @@ const LoginPage = () => {
     return (
         <div className='relative flex items-center justify-center py-20'>
 
-            <div className="absolute top-100 left-1/2 -translate-x-1/2 -translate-y-1/2 w-175 h-150 bg-[#6366F1]/20 rounded-full blur-[120px] -z-10" />
+            <div className="absolute hidden lg:block top-100 left-1/2 -translate-x-1/2 -translate-y-1/2 w-175 h-150 bg-[#6366F1]/20 rounded-full blur-[120px] -z-10" />
 
-            <div className=' z-10 w-5/12 p-8 border rounded-2xl border-[#C7C4D8] bg-white'>
+            <div className='z-10 w-11/12 md:w-7/12 lg:w-5/12 p-8 border rounded-2xl border-[#C7C4D8] bg-white'>
 
                 <div className='text-center'>
                     <h2 className={`${hankenGrotesk.className} text-[32px] font-bold mb-1`}>Welcome Back</h2>

@@ -31,7 +31,7 @@ const Comment = ({ comments }) => {
                             <div>
                                 <Avatar>
                                     <Avatar.Image alt={comment?.name} src={comment?.image} />
-                                    <Avatar.Fallback className='text-xl'>{comment?.name}</Avatar.Fallback>
+                                    <Avatar.Fallback className='text-xl'>{comment?.name[0]}</Avatar.Fallback>
                                 </Avatar>
                             </div>
 

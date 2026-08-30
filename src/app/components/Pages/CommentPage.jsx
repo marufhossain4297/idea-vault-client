@@ -44,6 +44,7 @@ const CommentPage = ({ comments, id }) => {
             body: JSON.stringify(commentInfoWithUser)
         })
         const data = await res.json()
+        console.log(data);
         if (data) {
             window.location.reload()
         }

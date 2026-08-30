@@ -7,8 +7,12 @@ import { IoMenu } from "react-icons/io5";
 import { FaLightbulb } from "react-icons/fa";
 import { authClient } from '@/lib/auth-client';
 import { Avatar, Button, Drawer } from '@heroui/react';
+import { IoIosArrowDown } from "react-icons/io";
 import Image from 'next/image';
 import { X } from 'lucide-react';
+import DashboardNavLink from './DashboardNavLink';
+import { FaUser } from 'react-icons/fa6';
+import { TbLogout } from "react-icons/tb";
 
 const hankenGrotesk = Hanken_Grotesk({
     variable: "--font-hanken-grotesk",
@@ -24,8 +28,8 @@ const NavBar = () => {
         <>
             <NavLink href={'/'}>Home</NavLink>
             <NavLink href={'/ideas'}>Ideas</NavLink>
-            <NavLink href={'/add-idea'}>Add Idea</NavLink>
-            <NavLink href={'/profile'}>Profile</NavLink>
+            {/* <NavLink href={'/add-idea'}>Add Idea</NavLink> */}
+            <NavLink href={'/profile'}>Dashboard</NavLink>
         </>
     )
 
@@ -46,12 +50,27 @@ const NavBar = () => {
                     {
                         user ?
                             <div className='flex items-center gap-5'>
-                                <div className='flex items-center gap-2.5'>
-                                    <Avatar>
-                                        <Avatar.Image alt="John Doe" src={user?.image} />
-                                        <Avatar.Fallback>{user?.name[0]}</Avatar.Fallback>
-                                    </Avatar>
-                                    <p className='pl-0 font-semibold'>{user.name}</p>
+                                <div className="dropdown">
+                                    <div tabIndex={0} role="button" className="btn border-none bg-transparent shadow-none m-1">
+                                        <div className='flex items-center gap-2.5'>
+                                            <Avatar>
+                                                <Avatar.Image referrerPolicy='no-referrer' alt="John Doe" src={user?.image} />
+                                                <Avatar.Fallback>{user?.name[0]}</Avatar.Fallback>
+                                            </Avatar>
+
+                                            <p className='pl-0 text-[17px] font-semibold'>{user.name}</p>
+
+                                            <p><IoIosArrowDown className='text-xl' /></p>
+                                        </div>
+                                    </div>
+
+                                    <ul tabIndex={-1} className="dropdown-content menu bg-base-100 rounded-box z-20 w-52 p-2 shadow-sm">
+
+                                        <DashboardNavLink className='flex items-center text-[17px] gap-2' href={'/profile'}><FaUser /> Profile</DashboardNavLink>
+
+                                        <button onClick={async () => await authClient.signOut()} className='px-4 py-2 text-white font-semibold bg-[#FF383C] rounded-xl shadow-none border-none btn'>Sign Out <TbLogout className='text-[18px]'/></button>
+
+                                    </ul>
                                 </div>
 
                                 <button onClick={async () => await authClient.signOut()} className='px-4 py-2 text-white font-medium bg-[#3525CD] rounded-xl shadow-none border-none btn'>Sign Out</button>
