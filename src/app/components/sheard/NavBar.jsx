@@ -13,6 +13,8 @@ import { X } from 'lucide-react';
 import DashboardNavLink from './DashboardNavLink';
 import { FaUser } from 'react-icons/fa6';
 import { TbLogout } from "react-icons/tb";
+import { toast } from 'sonner';
+import { redirect } from 'next/navigation';
 
 const hankenGrotesk = Hanken_Grotesk({
     variable: "--font-hanken-grotesk",
@@ -23,6 +25,12 @@ const NavBar = () => {
 
     const { data: session, isPending, error } = authClient.useSession()
     const user = session?.user
+
+    const logout = async () => {
+        await authClient.signOut()
+        toast.success('Logout success')
+        redirect('/')
+    }
 
     const links = (
         <>
@@ -68,12 +76,12 @@ const NavBar = () => {
 
                                         <DashboardNavLink className='flex items-center text-[17px] gap-2' href={'/profile'}><FaUser /> Profile</DashboardNavLink>
 
-                                        <button onClick={async () => await authClient.signOut()} className='px-4 py-2 text-white font-semibold bg-[#FF383C] rounded-xl shadow-none border-none btn'>Sign Out <TbLogout className='text-[18px]' /></button>
+                                        <button onClick={logout} className='px-4 py-2 text-white font-semibold bg-[#FF383C] rounded-xl shadow-none border-none btn'>Sign Out <TbLogout className='text-[18px]' /></button>
 
                                     </ul>
                                 </div>
 
-                                <button onClick={async () => await authClient.signOut()} className='px-4 py-2 text-white font-medium bg-[#3525CD] rounded-xl shadow-none border-none btn'>Sign Out</button>
+                                <button onClick={logout} className='px-4 py-2 text-white font-medium bg-[#3525CD] rounded-xl shadow-none border-none btn'>Sign Out</button>
                             </div>
                             :
                             <div className='gap-4 flex'>
@@ -151,10 +159,10 @@ const NavBar = () => {
                                                     <NavLink href={'/add-idea'}>Add Idea</NavLink>
                                                     <NavLink href={'/my-ideas'}>My Ideas</NavLink>
                                                     <NavLink href={'/my-interactions'}>My Interactions</NavLink>
-                                                    <NavLink href={'/profile'}>Profile</NavLink>
                                                 </>
                                                 : ''
                                             }
+                                            <NavLink href={'/profile'}>Profile</NavLink>
                                         </ul>
                                     </div>
 
@@ -165,7 +173,7 @@ const NavBar = () => {
                                         {
                                             user ?
                                                 <div className='flex items-center gap-5'>
-                                                    <button onClick={async () => await authClient.signOut()} className='px-4 py-2 text-white font-medium bg-[#3525CD] rounded-xl shadow-none border-none btn'>Sign Out</button>
+                                                    <button onClick={logout} className='px-4 py-2 text-white font-medium bg-[#3525CD] rounded-xl shadow-none border-none btn'>Sign Out</button>
                                                 </div>
                                                 :
                                                 <div className='gap-4 flex'>

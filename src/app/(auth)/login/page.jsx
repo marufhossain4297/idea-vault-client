@@ -9,6 +9,7 @@ import { MdOutlineEmail, MdOutlineLock } from 'react-icons/md';
 import { Hanken_Grotesk, JetBrains_Mono } from 'next/font/google';
 import { Button, FieldError, Input, Label, TextField } from '@heroui/react';
 import { authClient } from '@/lib/auth-client';
+import { toast } from 'sonner';
 
 const hankenGrotesk = Hanken_Grotesk({
     variable: "--font-hanken-grotesk",
@@ -35,12 +36,18 @@ const LoginPage = () => {
             rememberMe: true,
             callbackURL: '/'
         });
+        if(res){
+            toast.success('Login success')
+        }
+        else{
+            toast.error(error.message)
+        }
 
     }
     const googleSignIn = async () => {
         const data = await authClient.signIn.social({
             provider: "google",
-        });
+        })
     };
 
     return (
@@ -56,7 +63,7 @@ const LoginPage = () => {
                 </div>
 
                 <div>
-                    <form onClick={onSubmit} className="flex flex-col md:gap-4.5 gap-8">
+                    <form onSubmit={onSubmit} className="flex flex-col md:gap-4.5 gap-8">
 
                         <TextField
                             isRequired

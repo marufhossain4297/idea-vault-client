@@ -43,7 +43,7 @@ const MyIdeas = () => {
             <h2 className={`text-4xl font-bold ${hankenGrotesk.className}`}>My Ideas</h2>
             <p className='text-[#6A7282] text-[17px] mt-1'>Manage and edit your submitted startup concepts.</p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 mt-12 gap-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 mt-12 gap-8">
                 {ideas.map(idea =>
 
                     <div key={idea._id} className="border border-[#d8d8c4] rounded-2xl bg-[#F9F9FF] flex flex-col h-full overflow-hidden">

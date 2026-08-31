@@ -12,6 +12,7 @@ import { Hanken_Grotesk, JetBrains_Mono } from 'next/font/google';
 import { FieldError, Input, Label, TextField } from '@heroui/react';
 import { authClient } from '@/lib/auth-client';
 import { redirect } from 'next/navigation';
+import { toast } from 'sonner';
 
 const hankenGrotesk = Hanken_Grotesk({
     variable: "--font-hanken-grotesk",
@@ -38,6 +39,13 @@ const SignUpPage = () => {
             password: password,
             image: image
         });
+        if (res) {
+            toast.success('Sign up success')
+            redirect('/')
+        }
+        else {
+            toast.error(error.message)
+        }
 
     }
     const googleSignIn = async () => {

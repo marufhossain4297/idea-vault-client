@@ -5,6 +5,7 @@ import { Avatar, Button, FieldError, Label, TextArea, TextField } from '@heroui/
 import { MessageSquare, Upload } from 'lucide-react';
 import { authClient } from '@/lib/auth-client';
 import Comment from './Comment';
+import { toast } from 'sonner';
 
 
 const hankenGrotesk = Hanken_Grotesk({

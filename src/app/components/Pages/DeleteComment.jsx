@@ -1,5 +1,6 @@
 "use client"
 import { AlertDialog, Button } from "@heroui/react"
+import { toast } from "sonner"
 
 const DeleteComment = ({ comment }) => {
 
