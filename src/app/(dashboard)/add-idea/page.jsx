@@ -56,7 +56,7 @@ const AddIdeaPage = () => {
             title,
             category,
             budget,
-            tags: tags ? tags.split(',').map((tag) => tag.trim()) : [],
+            tags: [tags],
             image,
             targetaudience,
             shortdescription: shortdes,

@@ -36,14 +36,10 @@ const MyInteractions = () => {
                 <Tabs>
                     <TabList>
                         <Tab>Comments ({comments.length})</Tab>
-                        <Tab>Liked Ideas ()</Tab>
                     </TabList>
 
                     <TabPanel>
                         <CommentByUser comments={comments} />
-                    </TabPanel>
-                    <TabPanel>
-                        <h2>Any content 2</h2>
                     </TabPanel>
                 </Tabs>
             </div>

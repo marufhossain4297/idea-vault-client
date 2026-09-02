@@ -5,6 +5,7 @@ import { Upload } from 'lucide-react';
 import { Hanken_Grotesk, JetBrains_Mono } from 'next/font/google';
 import Image from 'next/image';
 import React from 'react';
+import { toast } from 'sonner';
 
 const hankenGrotesk = Hanken_Grotesk({
     variable: "--font-hanken-grotesk",
@@ -21,6 +22,20 @@ const Profile = () => {
 
     const { data: session } = authClient.useSession();
     const user = session?.user;
+
+    const onSubmit = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData.entries());
+        
+        await authClient.updateUser({
+            image: data.image,
+            name: data.name,
+        })
+        if(data){
+            toast.success("Profile updated successfully")
+        }
+    }
 
     return (
         <div className='mx-auto lg:w-full w-11/12'>
@@ -40,11 +55,11 @@ const Profile = () => {
                     </div>
                 </div>
 
-                <Form className="flex flex-col mt-10 gap-4">
+                <Form onSubmit={onSubmit} className="flex flex-col mt-10 gap-4">
 
                     <div className='grid md:grid-cols-2 gap-6'>
                         <div>
-                            <TextField value={user?.name} isRequired name='title' type="text">
+                            <TextField defaultValue={user?.name} isRequired name='name' type="text">
                                 <Label className={`text-[18px] ${hankenGrotesk.className} font-semibold text-black`}>Name</Label>
 
                                 <Input className="border shadow-none border-[#C7C4D8] py-3.5 placeholder:text-[#777587] px-4" placeholder="E.g., Quantum Encrypted Cloud Storage" />
@@ -54,7 +69,7 @@ const Profile = () => {
                         </div>
 
                         <div>
-                            <TextField isDisabled value={user?.email} name='email' isRequired>
+                            <TextField isDisabled defaultValue={user?.email} name='email' isRequired>
                                 <Label className={`text-[18px] ${hankenGrotesk.className} font-semibold text-black`}>Email</Label>
 
                                 <Input className="border shadow-none border-[#C7C4D8] py-3.5 placeholder:text-[#777587] px-4" placeholder="E.g., Quantum Encrypted Cloud Storage" />
@@ -64,7 +79,7 @@ const Profile = () => {
                         </div>
                     </div>
 
-                    <TextField value={user?.image} isRequired name='image' type="url">
+                    <TextField defaultValue={user?.image} isRequired name='image' type="url">
                         <Label className={`text-[18px] ${hankenGrotesk.className} font-semibold text-black`}>Image Url</Label>
 
                         <Input className="border shadow-none border-[#C7C4D8] py-3.5 placeholder:text-[#777587] px-4" placeholder="https://www.image.com" />

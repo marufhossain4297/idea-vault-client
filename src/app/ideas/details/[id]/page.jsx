@@ -61,9 +61,17 @@ const DetailsPage = async ({ params }) => {
                 </div>
 
                 <div>
-                    <p className={`${jetBrainsMono.className}`}>
+                    <p className={`${jetBrainsMono.className} md:block hidden text-sm`}>
                         {new Date(createdAt).toLocaleString("en-US", {
                             month: 'long',
+                            year: 'numeric',
+                            day: 'numeric'
+                        })}
+                    </p>
+
+                    <p className={`${jetBrainsMono.className} md:hidden text-sm`}>
+                        {new Date(createdAt).toLocaleString("en-US", {
+                            month: '2-digit',
                             year: 'numeric',
                             day: 'numeric'
                         })}

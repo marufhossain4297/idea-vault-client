@@ -28,6 +28,21 @@ const FeaturedCard = ({ data }) => {
             </div>
 
             <div className="p-5 flex flex-col justify-between flex-1">
+
+                <div className="flex justify-between items-center mb-4">
+                    {
+                        data?.category ? (<p className='border text-[12px] py-1 px-2.5 border-[#3525CD] text-[#3525CD] font-semibold bg-[#E9EDFF] rounded-full' key={data?.category}>{data?.category}</p>) : ''
+                    }
+
+                    <p className={`${jetBrainsMono.className}`}>
+                        {new Date(data.createdAt).toLocaleString("en-US", {
+                            month: '2-digit',
+                            year: 'numeric',
+                            day: 'numeric'
+                        })}
+                    </p>
+                </div>
+
                 <div>
                     <h3 className={`${hankenGrotesk.className} font-bold text-[18px] mb-2`}>
                         {data?.title}

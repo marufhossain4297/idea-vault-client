@@ -53,18 +53,25 @@ const Price = ({ idea }) => {
                 <h2 className={`${hankenGrotesk.className}`}>{idea?.targetaudience}</h2>
             </div>
 
-            {
-                idea?.tags == 0 ? '' : <div className='mt-4'>
-                    <p className={`text-[#464555] ${jetBrainsMono.className} text-[14px] mb-1`}>TAGS</p>
-                    <div className='flex gap-2 flex-wrap items-center'>
-                        {
-                            idea?.tags.map(tag => <p className='border text-[12px] py-1 px-2.5 border-[#3525CD] text-[#3525CD] font-semibold bg-[#E9EDFF] rounded-full' key={tag}>{tag}</p>)
-                        }
+            {Array.isArray(idea?.tags) && idea.tags.length > 0 && (
+                <div className="mt-4">
+                    <p className={`text-[#464555] ${jetBrainsMono.className} text-[14px] mb-1`}>
+                        TAGS
+                    </p>
+                    <div className="flex gap-2 flex-wrap items-center">
+                        {idea.tags.map((tag) => (
+                            <p
+                                className="border text-[12px] py-1 px-2.5 border-[#3525CD] text-[#3525CD] font-semibold bg-[#E9EDFF] rounded-full"
+                                key={tag}
+                            >
+                                {tag}
+                            </p>
+                        ))}
                     </div>
                 </div>
-            }
+            )}
             <div className='grid grid-cols-2 gap-2 items-center'>
-                
+
                 <ToggleButton className={`${hankenGrotesk.className} text-[17px] font-semibold bg-none w-full rounded-md mt-4 text-white bg-[#571AC0]`} isSelected={isSelected} onChange={setIsSelected}>
                     {({ isSelected: selected }) => (
                         <>

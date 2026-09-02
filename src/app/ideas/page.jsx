@@ -1,6 +1,8 @@
-import { Hanken_Grotesk, JetBrains_Mono } from 'next/font/google';
 import React from 'react';
+import { FieldError, Input, Label, SearchField, TextField } from "@heroui/react";
+import { Hanken_Grotesk, JetBrains_Mono } from 'next/font/google';
 import FeaturedCard from '../components/Pages/FeaturedCard';
+import IdeaFilterBar from '../components/Pages/IdeaFilterBar';
 
 
 const hankenGrotesk = Hanken_Grotesk({
@@ -15,7 +17,11 @@ const IdeasPage = async () => {
 
     return (
         <div className='w-11/12 mx-auto mt-10 mb-24'>
-            <h2 className={`${hankenGrotesk.className} font-bold text-3xl`}>Ideas</h2>
+            <h2 className={`${hankenGrotesk.className} font-bold text-3xl`}>All Ideas</h2>
+
+            <div className="mt-5">
+                <IdeaFilterBar />
+            </div>
 
             <div data-aos="fade-up" className="grid gap-6 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 my-8">
                 {

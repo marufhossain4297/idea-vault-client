@@ -39,9 +39,17 @@ const Comment = ({ comments }) => {
                                 <div className='flex mb-1.5 justify-between items-center'>
                                     <p className={`${hankenGrotesk.className} text-xl font-semibold text-[#3525CD] `}>{comment?.name}</p>
 
-                                    <p className={`${jetBrainsMono.className} text-sm`}>
+                                    <p className={`${jetBrainsMono.className} md:block hidden text-sm`}>
                                         {new Date().toLocaleString("en-US", {
                                             month: 'long',
+                                            year: 'numeric',
+                                            day: 'numeric'
+                                        })}
+                                    </p>
+
+                                    <p className={`${jetBrainsMono.className} md:hidden text-sm`}>
+                                        {new Date().toLocaleString("en-US", {
+                                            month: '2-digit',
                                             year: 'numeric',
                                             day: 'numeric'
                                         })}
