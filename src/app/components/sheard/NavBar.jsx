@@ -63,10 +63,10 @@ const NavBar = () => {
                                         <div className='flex items-center gap-2.5'>
                                             <Avatar>
                                                 <Avatar.Image referrerPolicy='no-referrer' alt="John Doe" src={user?.image} />
-                                                <Avatar.Fallback>{user?.name[0]}</Avatar.Fallback>
+                                                <Avatar.Fallback>{user?.name.slice(0, 2)}</Avatar.Fallback>
                                             </Avatar>
 
-                                            <p className='pl-0 text-[17px] font-semibold'>{user.name}</p>
+                                            <p className='pl-0 text-[17px] font-semibold'>{user?.name?.length > 5 ? `${user.name.slice(0, 5)}...` : user?.name}</p>
 
                                             <p><IoIosArrowDown className='text-xl' /></p>
                                         </div>
@@ -99,7 +99,7 @@ const NavBar = () => {
 
             <div className='lg:hidden'>
                 <Drawer>
-                    <Button className="bg-transparent text-black"><IoMenu /></Button>
+                    <Button className="bg-transparent text-black"><IoMenu className='text-3xl w-5.75 h-5.75' /></Button>
                     <Drawer.Backdrop>
                         <Drawer.Content placement="left">
                             <Drawer.Dialog>

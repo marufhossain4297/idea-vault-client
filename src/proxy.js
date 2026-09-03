@@ -11,7 +11,7 @@ export async function proxy(request) {
         headers: await headers()
     })
 
-    if(session){
+    if (session) {
         return NextResponse.next()
     }
 
@@ -21,5 +21,5 @@ export async function proxy(request) {
 
 
 export const config = {
-    matcher: ['/ideas', '/ideas/details/:path*', '/add-idea', '/my-ideas', '/my-interactions', '/profile']
+    matcher: ['/ideas', '/ideas/details/:path*', '/add-idea', '/my-ideas', '/my-interactions', '/profile', '/edit-idea/:path*']
 }
