@@ -32,7 +32,7 @@ const MyIdeas = () => {
     useEffect(() => {
         if (!id) return;
 
-        fetch(`http://localhost:8000/idea/${id}`)
+        fetch(`https://idea-vault-server-opal.vercel.app/idea/${id}`)
             .then(res => res.json())
             .then(data => setIdeas(data))
             .catch(err => console.error(err));

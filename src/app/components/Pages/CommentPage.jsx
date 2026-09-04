@@ -37,7 +37,7 @@ const CommentPage = ({ comments, id }) => {
             comment: commentInfo.comment,
             createdAt: new Date().toISOString()
         }
-        const res = await fetch('http://localhost:8000/comment', {
+        const res = await fetch('https://idea-vault-server-opal.vercel.app/comment', {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'

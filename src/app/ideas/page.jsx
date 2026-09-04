@@ -16,7 +16,7 @@ const IdeasPage = async () => {
         headers: await headers()
     })
 
-    const res = await fetch(`http://localhost:8000/ideas`, {
+    const res = await fetch(`https://idea-vault-server-opal.vercel.app/ideas`, {
         headers: {
             authorization: `${token.token}`
         }

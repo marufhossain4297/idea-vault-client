@@ -25,7 +25,7 @@ const CommentEdit = ({ comment }) => {
         const formData = new FormData(e.currentTarget)
         const comment = Object.fromEntries(formData.entries())
 
-        const res = await fetch(`http://localhost:8000/comment/${_id}`, {
+        const res = await fetch(`https://idea-vault-server-opal.vercel.app/comment/${_id}`, {
             method: 'PATCH',
             headers: {
                 'Content-type': 'application/json'

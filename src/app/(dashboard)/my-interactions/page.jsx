@@ -22,7 +22,7 @@ const MyInteractions = () => {
     useEffect(() => {
         if (!userId) return;
 
-        fetch(`http://localhost:8000/comments/${userId}`)
+        fetch(`https://idea-vault-server-opal.vercel.app/comments/${userId}`)
             .then(res => res.json())
             .then(data => setComments(data))
             .catch(err => console.error(err));

@@ -22,7 +22,7 @@ const EditPage = async ({ params }) => {
         headers: await headers()
     })
 
-    const res = await fetch(`http://localhost:8000/ideas/${id}`, {
+    const res = await fetch(`https://idea-vault-server-opal.vercel.app/ideas/${id}`, {
         headers: {
             authorization: `${token.token}`
         }

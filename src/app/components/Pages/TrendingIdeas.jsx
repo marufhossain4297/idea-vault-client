@@ -25,7 +25,7 @@ const TrendingIdeas = async () => {
         headers: await headers()
     })
 
-    const res = await fetch('http://localhost:8000/ideas/featured', {
+    const res = await fetch('https://idea-vault-server-opal.vercel.app/ideas/featured', {
         headers: {
             authorization: `${token.token}`,
         }

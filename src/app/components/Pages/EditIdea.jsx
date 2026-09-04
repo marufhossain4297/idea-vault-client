@@ -25,7 +25,7 @@ const EditIdea = ({ idea }) => {
         const formData = new FormData(e.currentTarget)
         const idea = Object.fromEntries(formData.entries())
 
-        const res = await fetch(`http://localhost:8000/ideas/${_id}`, {
+        const res = await fetch(`https://idea-vault-server-opal.vercel.app/ideas/${_id}`, {
             method: 'PATCH',
             headers: {
                 'Content-type': 'application/json'

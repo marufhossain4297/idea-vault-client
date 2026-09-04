@@ -14,7 +14,7 @@ const DeleteIdea = ({ idea }) => {
     const { _id } = idea
 
     const deleteIdea = async () => {
-        const res = await fetch(`http://localhost:8000/idea/${_id}`, {
+        const res = await fetch(`https://idea-vault-server-opal.vercel.app/idea/${_id}`, {
             method: 'DELETE'
         })
         const data = await res.json()

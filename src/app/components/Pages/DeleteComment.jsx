@@ -7,7 +7,7 @@ const DeleteComment = ({ comment }) => {
     const { _id } = comment
 
     const deleteComm = async () => {
-        const res = await fetch(`http://localhost:8000/comment/${_id}`, {
+        const res = await fetch(`https://idea-vault-server-opal.vercel.app/comment/${_id}`, {
             method: 'DELETE'
         })
         const data = await res.json()
