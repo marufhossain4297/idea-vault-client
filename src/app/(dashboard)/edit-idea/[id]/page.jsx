@@ -1,6 +1,7 @@
 import EditIdea from '@/app/components/Pages/EditIdea';
-import { authClient } from '@/lib/auth-client';
+import { auth } from '@/lib/auth';
 import { Hanken_Grotesk, JetBrains_Mono } from 'next/font/google';
+import { headers } from 'next/headers';
 import React from 'react';
 
 const hankenGrotesk = Hanken_Grotesk({
@@ -13,11 +14,19 @@ const jetBrainsMono = JetBrains_Mono({
     subsets: ["latin"],
 });
 
-const EditPage = async ({params}) => {
+const EditPage = async ({ params }) => {
 
     const { id } = await params
 
-    const res = await fetch(`http://localhost:8000/ideas/${id}`)
+    const token = await auth.api.getToken({
+        headers: await headers()
+    })
+
+    const res = await fetch(`http://localhost:8000/ideas/${id}`, {
+        headers: {
+            authorization: `${token.token}`
+        }
+    })
     const idea = await res.json()
 
     return (

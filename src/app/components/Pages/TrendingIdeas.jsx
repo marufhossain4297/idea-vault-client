@@ -3,6 +3,8 @@ import Link from 'next/link';
 import React from 'react';
 import { FaArrowRight } from 'react-icons/fa6';
 import FeaturedCard from './FeaturedCard';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 
 
 const hankenGrotesk = Hanken_Grotesk({
@@ -19,7 +21,15 @@ const jetBrainsMono = JetBrains_Mono({
 
 const TrendingIdeas = async () => {
 
-    const res = await fetch('http://localhost:8000/ideas/featured')
+    const token = await auth.api.getToken({
+        headers: await headers()
+    })
+
+    const res = await fetch('http://localhost:8000/ideas/featured', {
+        headers: {
+            authorization: `${token.token}`,
+        }
+    })
     const datas = await res.json()
 
     return (

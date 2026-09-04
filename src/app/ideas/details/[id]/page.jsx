@@ -11,6 +11,8 @@ import CommentPage from '@/app/components/Pages/CommentPage';
 import { AlignLeft, FileText, UserPlus, Users } from 'lucide-react';
 import Collaboratioin from '@/app/components/Pages/Collaboratioin';
 import Price from '@/app/components/Pages/Price';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 
 const hankenGrotesk = Hanken_Grotesk({
     variable: "--font-hanken-grotesk",
@@ -27,10 +29,22 @@ const jetBrainsMono = JetBrains_Mono({
 const DetailsPage = async ({ params }) => {
     const { id } = await params
 
-    const res = await fetch(`http://localhost:8000/ideas/${id}`)
+    const token = await auth.api.getToken({
+        headers: await headers()
+    })
+
+    const res = await fetch(`http://localhost:8000/ideas/${id}`, {
+        headers:{
+            authorization: `${token.token}`
+        }
+    })
     const idea = await res.json()
 
-    const commentRes = await fetch(`http://localhost:8000/comment/${id}`)
+    const commentRes = await fetch(`http://localhost:8000/comment/${id}`, {
+        headers:{
+            authorization: `${token.token}`
+        }
+    })
     const comments = await commentRes.json()
 
     const { budget, category, collaborations, createdAt, description, email, image, name, problemstatement, shortdescription, solution, tags, targetaudience, title, userId, userImage } = idea

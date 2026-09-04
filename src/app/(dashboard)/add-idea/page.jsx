@@ -67,10 +67,13 @@ const AddIdeaPage = () => {
             collaborations: collaborations
         };
 
+        const { data: tokenData } = await authClient.token()
+
         const res = await fetch('http://localhost:8000/ideas', {
             method: 'POST',
             headers: {
-                'Content-type': 'application/json'
+                'Content-type': 'application/json',
+                'authorization': `${tokenData.token}`
             },
             body: JSON.stringify(ideaInfoWithUser)
         });
@@ -315,10 +318,6 @@ const AddIdeaPage = () => {
 
 export default AddIdeaPage;
 
-
-
-
-// 'use client'
 // import React, { useState } from 'react';
 // import { MinusCircle, Plus, Upload } from 'lucide-react';
 // import { Hanken_Grotesk, JetBrains_Mono } from 'next/font/google';

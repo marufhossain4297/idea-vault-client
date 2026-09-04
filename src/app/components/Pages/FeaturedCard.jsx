@@ -35,10 +35,10 @@ const FeaturedCard = ({ data }) => {
                     }
 
                     <p className={`${jetBrainsMono.className}`}>
-                        {new Date(data.createdAt).toLocaleString("en-US", {
+                        {new Date(data.createdAt).toLocaleString("en-UK", {
                             month: '2-digit',
                             year: 'numeric',
-                            day: 'numeric'
+                            day: '2-digit',
                         })}
                     </p>
                 </div>
