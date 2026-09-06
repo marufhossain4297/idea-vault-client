@@ -39,6 +39,7 @@ const DetailsPage = async ({ params }) => {
         }
     })
     const idea = await res.json()
+    console.log(idea);
 
     const commentRes = await fetch(`https://idea-vault-server-opal.vercel.app/comment/${id}`, {
         headers:{

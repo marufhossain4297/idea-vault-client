@@ -4,6 +4,7 @@ import Image from 'next/image';
 import React, { useState } from 'react';
 import DeleteComment from './DeleteComment';
 import CommentEdit from './CommentEdit';
+import { useSession } from '@/lib/auth-client';
 
 const hankenGrotesk = Hanken_Grotesk({
     variable: "--font-hanken-grotesk",
@@ -17,6 +18,8 @@ const jetBrainsMono = JetBrains_Mono({
 });
 
 const Comment = ({ comments }) => {
+
+    const { data: session } = useSession();
 
     const [editingId, setEditingId] = useState(null);
 
@@ -57,21 +60,27 @@ const Comment = ({ comments }) => {
                                 </div>
 
                                 <div>
-                                    <p className="text-[#464555]">{comment.comment}</p>
+                                    <p className={`text-[#464555] ${session?.user?.email === comment.email ? 'mb-0' : 'mb-6'}`}>{comment.comment}</p>
                                 </div>
 
-                                <div className='flex gap-4 text-[15px] items-center font-semibold justify-end'>
-                                    {!isEditing
+                                {
+                                    session?.user?.email === comment.email
                                         ?
+                                        <div className='flex gap-4 text-[15px] items-center font-semibold justify-end'>
+                                            {!isEditing
+                                                ?
 
-                                        <p onClick={() => setEditingId(comment._id)} className="cursor-pointer text-blue-600" > Edit </p>
+                                                <p onClick={() => setEditingId(comment._id)} className="cursor-pointer text-blue-600" > Edit </p>
+                                                :
+
+                                                <p onClick={() => setEditingId(null)} className="cursor-pointer text-blue-600" >cancle</p>
+
+                                            }
+                                            <DeleteComment comment={comment} />
+                                        </div>
                                         :
-
-                                        <p onClick={() => setEditingId(null)} className="cursor-pointer text-blue-600" >cancle</p>
-
-                                    }
-                                    <DeleteComment comment={comment} />
-                                </div>
+                                        ''
+                                }
 
                                 {isEditing && (
                                     <div className="mt-2 mb-5">

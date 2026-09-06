@@ -3,8 +3,6 @@ import Link from 'next/link';
 import React from 'react';
 import { FaArrowRight } from 'react-icons/fa6';
 import FeaturedCard from './FeaturedCard';
-import { auth } from '@/lib/auth';
-import { headers } from 'next/headers';
 
 
 const hankenGrotesk = Hanken_Grotesk({
@@ -21,14 +19,8 @@ const jetBrainsMono = JetBrains_Mono({
 
 const TrendingIdeas = async () => {
 
-    const token = await auth.api.getToken({
-        headers: await headers()
-    })
-
-    const res = await fetch('https://idea-vault-server-opal.vercel.app/ideas/featured', {
-        headers: {
-            authorization: `${token.token}`,
-        }
+    const res = await fetch('https://idea-vault-server-opal.vercel.app/ideas/featured',{
+        cache: 'no-store'
     })
     const datas = await res.json()
 

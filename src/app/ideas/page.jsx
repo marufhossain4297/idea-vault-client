@@ -15,13 +15,16 @@ const IdeasPage = async () => {
     const token = await auth.api.getToken({
         headers: await headers()
     })
+    console.log(token.token);
 
     const res = await fetch(`https://idea-vault-server-opal.vercel.app/ideas`, {
         headers: {
             authorization: `${token.token}`
-        }
+        },
+        cache: 'no-store'
     });
     const datas = await res.json()
+    console.log(datas);
 
     return (
         <div className='w-11/12 mx-auto mt-10 mb-24'>
